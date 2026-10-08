@@ -21,7 +21,6 @@ btnIntercambiar.addEventListener("click", intercambiarMonedas);
 async function convertirMoneda() {
   // Misiones guiadas 1-3: ya existe un flujo mínimo funcional EUR -> USD.
   // A partir de la Misión 4 debes convertirlo en una solución dinámica.
-   const datos = await respuesta.json(); 
 
   const valor = Number(cantidad.value);
 
@@ -42,7 +41,8 @@ async function convertirMoneda() {
     const respuesta = await fetch(url);
 
     // TODO · MISIÓN 09: comprobar response.ok y lanzar un error si corresponde.
-    const datos = await respuesta.json(); 
+    const datos = await respuesta.json();
+    console.log(datos);   // ← temporal para el Checkpoint 1
 
     const conversion = valor * datos.rate;
 
