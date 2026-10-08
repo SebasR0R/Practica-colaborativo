@@ -1,20 +1,19 @@
 # Currency Explorer · Starter Project
 
 ## Integrantes
-- Estudiante A:
-- Estudiante B:
+- Estudiante A: Sebastián Rodríguez Ruiz  
+- Estudiante B: granados magueyal pamela
 
 ## Pair Programming
 | Misión | Driver | Navigator | Commit / evidencia |
 |---|---|---|---|
-| 04 | | | |
+| 04     | pamela | sebastian |                    |
 | 05 | | | |
 | 06 | | | |
 | 07 | | | |
 | 08 | | | |
 | 09 | | | |
 | 10 | | | |
-
 ## Objetivo
 Completar una aplicación frontend que consuma Frankfurter API para convertir divisas y demostrar comprensión de eventos, DOM, `fetch()`, JSON, asincronía, validación y manejo de errores.
 
