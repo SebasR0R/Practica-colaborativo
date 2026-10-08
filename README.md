@@ -27,6 +27,18 @@ Completar una aplicación frontend que consuma Frankfurter API para convertir di
 Endpoint de referencia:
 `https://api.frankfurter.dev/v2/rate/{origen}/{destino}`
 
+## Evidencia de red (Checkpoint 1)
+
+Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
+
+![Lista de peticiones](evidencia/network-lista.png)
+![Cabeceras](evidencia/network-cabeceras.png)
+![Respuesta JSON](evidencia/network-respuesta.png)
+
+**Qué observamos:** el navegador pide el tipo de cambio a la API (Network),
+recibe un JSON con `date`, `base`, `quote` y `rate`, y `code.js` usa
+`datos.rate` para calcular y mostrar el resultado (Console y DOM).
+
 ## Decisiones técnicas
 Registra aquí al menos dos decisiones tomadas por la pareja y explica por qué.
 
