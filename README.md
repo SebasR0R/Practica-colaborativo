@@ -28,7 +28,7 @@ Endpoint de referencia:
 - [x] Botón para intercambiar monedas (Misión 06)
 - [x] Validación completa de la cantidad y las monedas (Misión 07)
 - [x] Estado de carga con botones deshabilitados (Misión 08)
-- [ ] Manejo de errores de red y HTTP (Misión 09)
+- [x] Manejo de errores de red y HTTP (Misión 09)
 - [ ] Diseño responsive (Misión 10)
 
 ## Pair Programming
@@ -40,7 +40,7 @@ Endpoint de referencia:
 | 06 | Pamela | Sebastián | Misión 06: intercambio de monedas y recálculo — Driver: B / Navigator: A |
 | 07 | Sebastián | Pamela | Misión 07: validación de cantidad y monedas — Driver: A / Navigator: B |
 | 08 | Pamela | Sebastián | Misión 08: estado de carga y botones deshabilitados — Driver: B / Navigator: A |
-| 09 | | | |
+| 09 | Sebastian| Pamela  | Misión 09: manejo de errores de red y HTTP con response.ok — Driver: A / Navigator: B|
 | 10 | | | |
 
 ## Diseño por misión
@@ -51,6 +51,7 @@ Frase "Necesitamos ___ porque ___" escrita antes de programar cada misión.
 - **Misión 06:** Necesitamos intercambiar los valores de los dos `<select>` y volver a consultar porque el usuario quiere ver la conversión inversa sin elegir las monedas a mano.
 - **Misión 07:** Necesitamos validar la cantidad y las monedas antes de consultar la API porque un valor vacío, cero, negativo o una moneda repetida producen resultados sin sentido o peticiones innecesarias.
 - **Misión 08:** Necesitamos mostrar "Consultando..." y deshabilitar los botones mientras se espera la respuesta porque la petición tarda y el usuario podría pensar que no pasó nada o lanzar varias consultas a la vez.
+- **Misión 09:** Necesitamos comprobar `response.ok` y distinguir el tipo de fallo porque `fetch()` no lanza error cuando el servidor responde con 404 o 500, y el usuario debe entender qué pasó en lugar de ver un resultado roto.
 
 ## Evidencia de red (Checkpoint 1)
 
@@ -71,6 +72,7 @@ Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
 | 06 | Variable `temporal` en el intercambio | | |
 | 07 | Validación previa al fetch | | |
 | 08 | Uso de `finally` para reactivar los botones | | |
+| 09 | Diferencia entre fallo de red (catch) y error HTTP (response.ok) | | |
 
 ## Decisiones técnicas
 
@@ -78,6 +80,7 @@ Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
 2. Leímos las monedas con `origen.value` y `destino.value`, por lo que no fue necesario modificar la línea de la URL: ya usaba template literals.
 3. Para el caso EUR → EUR elegimos la Opción A: bloquear la acción y notificar al usuario con un mensaje claro, priorizando la simplicidad del código y evitando llamadas innecesarias a la API.
 4. Usamos un bloque `finally` para reactivar los botones porque se ejecuta siempre, tanto si la consulta tiene éxito como si falla; sin él, un error dejaría la interfaz bloqueada.
+5. Comprobamos `response.ok` antes de llamar a `response.json()` para capturar respuestas con código de error HTTP (como 404 o 500), lanzando un error intencional para que el bloque `catch` lo procese. Además, centralizamos los mensajes en `obtenerMensajeError()` para separar la lógica de red de la presentación al usuario.
 
 ## Pendientes detectados
 - Ninguno por ahora.
@@ -86,10 +89,10 @@ Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
 - EUR → EUR (misma moneda en origen y destino): resuelto en la Misión 07 con un mensaje de validación.
 
 ## Revisión cruzada
-- Aspecto bien resuelto:
-- Error o comportamiento mejorable:
-- Propuesta de mejora:
-- Cambio incorporado después de la revisión:
+- **Aspecto bien resuelto:** La separación de la lógica de mensajes de error en `obtenerMensajeError()`, permitiendo respuestas claras según si falló la red o la API.
+- **Error o comportamiento mejorable:** Antes de la Misión 09, al simular un error HTTP (como una URL incorrecta con `/v2/ratee/`), la aplicación no entraba al `catch` y mostraba un resultado `NaN` en pantalla al intentar procesar una respuesta de error como si fuera un JSON válido.
+- **Propuesta de mejora:** Lanzar un error manualmente cuando `response.ok` sea `false` antes de intentar analizar el cuerpo de la respuesta con `.json()`.
+- **Cambio incorporado después de la revisión:** Se agregó la validación `if (!respuesta.ok) throw error` y la traducción adecuada de estados HTTP (404, 500, etc.) hacia mensajes amables para el usuario.
 
 ## Reflexión final (150–200 palabras)
 Explica el principal aprendizaje técnico, una dificultad relevante y una decisión que haya surgido del trabajo Driver/Navigator.
