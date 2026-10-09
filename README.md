@@ -108,4 +108,8 @@ Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
 - **Cambio incorporado después de la revisión:** Se agregó la validación `if (!respuesta.ok) throw error` y la traducción adecuada de estados HTTP (404, 500, etc.) hacia mensajes amables para el usuario.
 
 ## Reflexión final (150–200 palabras)
-Explica el principal aprendizaje técnico, una dificultad relevante y una decisión que haya surgido del trabajo Driver/Navigator.
+El principal aprendizaje técnico fue comprender el recorrido completo de los datos: un clic dispara un evento, fetch() solicita el JSON a la API, response.json() lo convierte en un objeto y JavaScript calcula y actualiza el DOM con textContent. Entendimos que HTTP y JSON son pasos distintos: fetch() solo lanza error ante fallos de red, por lo que un 404 no entraba al catch y mostraba NaN hasta que comprobamos response.ok antes de leer el JSON.
+
+La dificultad más relevante fue el ámbito de las variables y el orden de ejecución. Al principio intentamos usar datos y respuesta fuera del bloque donde se declaraban, y obtuvimos errores de referencia que nos obligaron a entender dónde existe cada variable y por qué la asincronía exige esperar con await antes de usar la respuesta.
+
+Una decisión surgida del trabajo Driver/Navigator fue el caso EUR → EUR. Mientras uno escribía el código de los selectores, el otro propuso probar pares repetidos y detectó que la consulta no tenía sentido. Lo anotamos como pendiente y en la Misión 07 elegimos bloquear la acción con un mensaje claro, evitando peticiones innecesarias. Comprobamos que el Navigator no solo observa: anticipa errores.
