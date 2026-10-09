@@ -36,12 +36,18 @@ async function convertirMoneda() {
   const url = `https://api.frankfurter.dev/v2/rate/${monedaOrigen}/${monedaDestino}`;
 
   try {
-    // Misión 08 ✔ · estado de carga
+    // Misión 08 ✔ · estado visual de carga
     establecerCarga(true);
 
     const respuesta = await fetch(url);
 
-    // TODO · MISIÓN 09: comprobar response.ok y lanzar un error si corresponde.
+    // Misión 09 ✔ · un status 404 o 500 no lanza error por sí solo
+    if (!respuesta.ok) {
+      const error = new Error("Error HTTP");
+      error.status = respuesta.status;
+      throw error;
+    }
+
     const datos = await respuesta.json();
 
     const conversion = valor * datos.rate;
@@ -54,12 +60,12 @@ async function convertirMoneda() {
       `1 ${monedaOrigen} = ${datos.rate} ${monedaDestino} · ${datos.date}`;
 
   } catch (error) {
-    // TODO · MISIÓN 09: mejora el mensaje y analiza qué errores pueden llegar aquí.
-    mostrarError("No fue posible completar la consulta.");
+    // Misión 09 ✔ · mensaje claro según el tipo de fallo
+    mostrarError(obtenerMensajeError(error));
     console.error(error);
 
   } finally {
-    // Se ejecuta siempre: éxito o error
+    // Misión 08 ✔ · se ejecuta siempre, haya éxito o error
     establecerCarga(false);
   }
 }
@@ -79,20 +85,6 @@ function mostrarError(mensaje) {
   detalleTasa.textContent = "Revisa los datos e inténtalo nuevamente.";
 }
 
-// Misión 08 ✔️ · activa o desactiva el estado de carga
-function establecerCarga(cargando) {
-  btnConvertir.disabled = cargando;
-  btnIntercambiar.disabled = cargando;
-  btnConvertir.textContent = cargando ? "Consultando..." : "Convertir";
-
-  if (cargando) {
-    resultado.classList.remove("error");
-    resultadoTexto.textContent = "Consultando...";
-    detalleTasa.textContent = "Obteniendo el tipo de cambio...";
-  }
-}
-
-
 // Misión 05 ✔ · formatea un monto con separadores y decimales propios de cada moneda
 function formatearMonto(monto, moneda) {
   return new Intl.NumberFormat("es-MX", {
@@ -110,6 +102,36 @@ function validarEntrada(texto, valor, monedaOrigen, monedaDestino) {
   if (valor <= 0) return "La cantidad debe ser mayor que cero.";
   if (monedaOrigen === monedaDestino) return "Elige dos monedas distintas.";
   return null;
+}
+
+// Misión 08 ✔ · activa o desactiva el estado de carga
+function establecerCarga(cargando) {
+  btnConvertir.disabled = cargando;
+  btnIntercambiar.disabled = cargando;
+  btnConvertir.textContent = cargando ? "Consultando..." : "Convertir";
+
+  if (cargando) {
+    resultado.classList.remove("error");
+    resultadoTexto.textContent = "Consultando...";
+    detalleTasa.textContent = "Obteniendo el tipo de cambio...";
+  }
+}
+
+// Misión 09 ✔ · traduce el error técnico a un mensaje para el usuario
+function obtenerMensajeError(error) {
+  if (error.status === 404 || error.status === 422) {
+    return "La API no reconoce el par de monedas seleccionado.";
+  }
+  if (error.status >= 500) {
+    return "El servicio de tipos de cambio no está disponible. Inténtalo más tarde.";
+  }
+  if (error.status) {
+    return `La API respondió con un error (código ${error.status}).`;
+  }
+  if (error instanceof TypeError) {
+    return "No se pudo conectar. Revisa tu conexión a internet.";
+  }
+  return "No fue posible completar la consulta.";
 }
 
 // PISTA PARA EL RETO:
