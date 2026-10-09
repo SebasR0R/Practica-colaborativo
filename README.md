@@ -42,7 +42,11 @@ recibe un JSON con `date`, `base`, `quote` y `rate`, y `code.js` usa
 ## Decisiones técnicas
 Registra aquí al menos dos decisiones tomadas por la pareja y explica por qué.
 
-1. 
+1. se decisio usar Intl.NumberFormat en la mision 5 ya que este formatea con separadores de miles y los decimales propios de cada moneda. Está es soportada por todos los navegadores modernos
+el valor es un numero Porque el input entrega texto, pero antes lo convertimos con Number(cantidad.value) y lo validamos. Intl.NumberFormat y la comparación monto < 1 necesitan un número real.
+que hace cada cosa: 
+API: rate (tasa) y date (fecha).
+App: la cantidad del usuario, la multiplicación, el formato y la actualización del DOM.
 2. 
 
 ## Revisión cruzada
