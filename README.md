@@ -1,20 +1,19 @@
 # Currency Explorer · Starter Project
 
 ## Integrantes
-- Estudiante A:
-- Estudiante B:
+- Estudiante A: Sebastián Rodríguez Ruiz  
+- Estudiante B: granados magueyal pamela
 
 ## Pair Programming
 | Misión | Driver | Navigator | Commit / evidencia |
 |---|---|---|---|
-| 04 | | | |
+| 04     | pamela | sebastian |"Misión 04: monedas dinámicas desde los selectores — Driver: B / Navigator: A"|
 | 05 | | | |
 | 06 | | | |
 | 07 | | | |
 | 08 | | | |
 | 09 | | | |
 | 10 | | | |
-
 ## Objetivo
 Completar una aplicación frontend que consuma Frankfurter API para convertir divisas y demostrar comprensión de eventos, DOM, `fetch()`, JSON, asincronía, validación y manejo de errores.
 
@@ -27,6 +26,18 @@ Completar una aplicación frontend que consuma Frankfurter API para convertir di
 ## API
 Endpoint de referencia:
 `https://api.frankfurter.dev/v2/rate/{origen}/{destino}`
+
+## Evidencia de red (Checkpoint 1)
+
+Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
+
+![Lista de peticiones](evidencia/network-lista.png)
+![Cabeceras](evidencia/network-cabeceras.png)
+![Respuesta JSON](evidencia/network-respuesta.png)
+
+**Qué observamos:** el navegador pide el tipo de cambio a la API (Network),
+recibe un JSON con `date`, `base`, `quote` y `rate`, y `code.js` usa
+`datos.rate` para calcular y mostrar el resultado (Console y DOM).
 
 ## Decisiones técnicas
 Registra aquí al menos dos decisiones tomadas por la pareja y explica por qué.
