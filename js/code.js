@@ -19,17 +19,19 @@ btnIntercambiar.addEventListener("click", intercambiarMonedas);
 
 // 3. FUNCIÓN PRINCIPAL
 async function convertirMoneda() {
-  const valor = Number(cantidad.value);
-
-  // TODO · MISIÓN 07: sustituir esta validación mínima por una validación completa.
-  if (!Number.isFinite(valor) || valor <= 0) {
-    mostrarError("Escribe una cantidad mayor que cero.");
-    return;
-  }
+  const textoCantidad = cantidad.value.trim();
+  const valor = Number(textoCantidad);
 
   // Misión 04 ✔ · las monedas salen de los <select>
   const monedaOrigen = origen.value;
   const monedaDestino = destino.value;
+
+  // Misión 07 ✔ · validar antes de consultar la API
+  const mensajeError = validarEntrada(textoCantidad, valor, monedaOrigen, monedaDestino);
+  if (mensajeError) {
+    mostrarError(mensajeError);
+    return;
+  }
 
   const url = `https://api.frankfurter.dev/v2/rate/${monedaOrigen}/${monedaDestino}`;
 
@@ -56,25 +58,19 @@ async function convertirMoneda() {
   }
 }
 
+// Misión 06 ✔ · intercambia origen y destino y vuelve a calcular
 function intercambiarMonedas() {
-  // TODO · MISIÓN 06:
-  // 1) guardar temporalmente el valor de origen
-  // 2) intercambiar origen.value y destino.value
-  // 3) volver a calcular
-  mostrarError("Misión 06 pendiente: implementa el intercambio de monedas.");
+  const temporal = origen.value;
+  origen.value = destino.value;
+  destino.value = temporal;
+  convertirMoneda();
 }
 
 // 4. UTILIDADES DE INTERFAZ
-function intercambiarMonedas() {
-  // 1) guardar temporalmente el valor de origen
-  const temporal = origen.value;
-
-  // 2) intercambiar origen.value y destino.value
-  origen.value = destino.value;
-  destino.value = temporal;
-
-  // 3) volver a calcular
-  convertirMoneda();
+function mostrarError(mensaje) {
+  resultado.classList.add("error");
+  resultadoTexto.textContent = mensaje;
+  detalleTasa.textContent = "Revisa los datos e inténtalo nuevamente.";
 }
 
 // Misión 05 ✔ · formatea un monto con separadores y decimales propios de cada moneda
@@ -85,6 +81,15 @@ function formatearMonto(monto, moneda) {
     currencyDisplay: "code",
     maximumFractionDigits: monto < 1 ? 4 : 2
   }).format(monto);
+}
+
+// Misión 07 ✔ · devuelve un mensaje de error, o null si los datos son válidos
+function validarEntrada(texto, valor, monedaOrigen, monedaDestino) {
+  if (texto === "") return "Escribe una cantidad.";
+  if (!Number.isFinite(valor)) return "La cantidad no es un número válido.";
+  if (valor <= 0) return "La cantidad debe ser mayor que cero.";
+  if (monedaOrigen === monedaDestino) return "Elige dos monedas distintas.";
+  return null;
 }
 
 // PISTA PARA EL RETO:
