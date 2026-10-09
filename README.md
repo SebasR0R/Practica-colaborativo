@@ -1,31 +1,53 @@
-# Currency Explorer · Starter Project
+# Currency Explorer
+
+Conversor de divisas en HTML, CSS y JavaScript Vanilla que consume la API pública Frankfurter. Proyecto de Pair Programming.
 
 ## Integrantes
-- Estudiante A: Sebastián Rodríguez Ruiz  
-- Estudiante B: granados magueyal pamela
+- Estudiante A: Sebastián Rodríguez Ruiz
+- Estudiante B: Pamela Granados Magueyal
 
-## Pair Programming
-| Misión| Driver  | Navigator | Commit / evidencia |
-|---    |---      |---        |---                 |
-| 04    |pamela   | sebastian |"Misión 04: monedas dinámicas desde los selectores — Driver: B / Navigator: A"|
-| 05    |sebastian| pamela    |"Misión 05: Necesitamos formatear el resultado según la moneda porque no todas  usan dos decimales ni resultan legibles con números grandes o muy pequeños."|
-| 06 | | | |
-| 07 | | | |
-| 08 | | | |
-| 09 | | | |
-| 10 | | | |
 ## Objetivo
 Completar una aplicación frontend que consuma Frankfurter API para convertir divisas y demostrar comprensión de eventos, DOM, `fetch()`, JSON, asincronía, validación y manejo de errores.
 
+## API utilizada
+Frankfurter API v2 (HTTPS, sin API key, respuesta en JSON).
+
+Endpoint de referencia:
+`https://api.frankfurter.dev/v2/rate/{origen}/{destino}`
+
 ## Ejecución
-1. Descomprime el proyecto.
+1. Clona el repositorio.
 2. Abre la carpeta en VS Code.
 3. Ejecuta `index.html` con Live Server o un servidor local equivalente.
 4. Abre DevTools → Console y Network para observar el comportamiento.
 
-## API
-Endpoint de referencia:
-`https://api.frankfurter.dev/v2/rate/{origen}/{destino}`
+## Funcionalidades
+- [x] Consulta del tipo de cambio a la API con `fetch()` (Misiones 1-3)
+- [x] Selección dinámica de moneda origen y destino (Misión 04)
+- [x] Resultado formateado según la moneda (Misión 05)
+- [x] Botón para intercambiar monedas (Misión 06)
+- [ ] Validación completa de la cantidad (Misión 07)
+- [ ] Estado de carga (Misión 08)
+- [ ] Manejo de errores de red y HTTP (Misión 09)
+- [ ] Diseño responsive (Misión 10)
+
+## Pair Programming
+
+| Misión | Driver | Navigator | Commit / evidencia |
+|---|---|---|---|
+| 04 | Pamela | Sebastián | Misión 04: monedas dinámicas desde los selectores — Driver: B / Navigator: A |
+| 05 | Sebastián | Pamela | Misión 05: conversión completa con formato por moneda — Driver: A / Navigator: B |
+| 06 | Pamela| Sebastian | Misión 06: intercambio de monedas y recálculo — Driver: B / Navigator: A|
+| 07 | | | |
+| 08 | | | |
+| 09 | | | |
+| 10 | | | |
+
+## Diseño por misión
+Frase "Necesitamos ___ porque ___" escrita antes de programar cada misión.
+
+- **Misión 04:** Necesitamos leer los valores de los `<select>` porque la URL del endpoint debe depender de la moneda que elija el usuario.
+- **Misión 05:** Necesitamos formatear el resultado según la moneda porque no todas usan dos decimales ni resultan legibles con números grandes o muy pequeños.
 
 ## Evidencia de red (Checkpoint 1)
 
@@ -35,19 +57,25 @@ Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
 ![Cabeceras](evidencia/network-cabeceras.png)
 ![Respuesta JSON](evidencia/network-respuesta.png)
 
-**Qué observamos:** el navegador pide el tipo de cambio a la API (Network),
-recibe un JSON con `date`, `base`, `quote` y `rate`, y `code.js` usa
-`datos.rate` para calcular y mostrar el resultado (Console y DOM).
+**Qué observamos:** el navegador pide el tipo de cambio a la API (Network), recibe un JSON con `date`, `base`, `quote` y `rate`, y `code.js` usa `datos.rate` para calcular y mostrar el resultado (Console y DOM).
+
+## Checkpoints
+
+| Misión | Checkpoint | Explicado por | Observación |
+|---|---|---|---|
+| 1 | Console + Network | | |
+| 2 | Recorrido clic → DOM | | |
+| 04 | `origen` vs `origen.value` | | |
+| 05 | Qué viene de la API y qué genera la app | | |
+| 06 | Variable `temporal` en el intercambio | | |
 
 ## Decisiones técnicas
-Registra aquí al menos dos decisiones tomadas por la pareja y explica por qué.
 
-1. se decisio usar Intl.NumberFormat en la mision 5 ya que este formatea con separadores de miles y los decimales propios de cada moneda. Está es soportada por todos los navegadores modernos
-el valor es un numero Porque el input entrega texto, pero antes lo convertimos con Number(cantidad.value) y lo validamos. Intl.NumberFormat y la comparación monto < 1 necesitan un número real.
-que hace cada cosa: 
-API: rate (tasa) y date (fecha).
-App: la cantidad del usuario, la multiplicación, el formato y la actualización del DOM.
-2. 
+1. Usamos `Intl.NumberFormat` en lugar de `toFixed(2)` porque `toFixed(2)` mostraba 0.01 para 1 JPY → USD y no separaba los miles. Lo encapsulamos en la función `formatearMonto()` para que cada función tenga una sola responsabilidad.
+2. Leímos las monedas con `origen.value` y `destino.value`, por lo que no fue necesario modificar la línea de la URL: ya usaba template literals.
+
+## Pendientes detectados
+- EUR → EUR (misma moneda en origen y destino) no está contemplado. Se resolverá en la Misión 07.
 
 ## Revisión cruzada
 - Aspecto bien resuelto:
