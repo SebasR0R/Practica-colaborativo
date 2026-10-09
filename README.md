@@ -29,7 +29,7 @@ Endpoint de referencia:
 - [x] Validación completa de la cantidad y las monedas (Misión 07)
 - [x] Estado de carga con botones deshabilitados (Misión 08)
 - [x] Manejo de errores de red y HTTP (Misión 09)
-- [ ] Diseño responsive (Misión 10)
+- [x] Diseño responsive (Misión 10)
 
 ## Pair Programming
 
@@ -40,8 +40,8 @@ Endpoint de referencia:
 | 06 | Pamela | Sebastián | Misión 06: intercambio de monedas y recálculo — Driver: B / Navigator: A |
 | 07 | Sebastián | Pamela | Misión 07: validación de cantidad y monedas — Driver: A / Navigator: B |
 | 08 | Pamela | Sebastián | Misión 08: estado de carga y botones deshabilitados — Driver: B / Navigator: A |
-| 09 | Sebastian| Pamela  | Misión 09: manejo de errores de red y HTTP con response.ok — Driver: A / Navigator: B|
-| 10 | | | |
+| 09 | Sebastián | Pamela | Misión 09: manejo de errores de red y HTTP con response.ok — Driver: A / Navigator: B |
+| 10 | Pamela | Sebastián | Misión 10: diseño responsive y estados de interfaz — Driver: B / Navigator: A |
 
 ## Diseño por misión
 Frase "Necesitamos ___ porque ___" escrita antes de programar cada misión.
@@ -52,6 +52,7 @@ Frase "Necesitamos ___ porque ___" escrita antes de programar cada misión.
 - **Misión 07:** Necesitamos validar la cantidad y las monedas antes de consultar la API porque un valor vacío, cero, negativo o una moneda repetida producen resultados sin sentido o peticiones innecesarias.
 - **Misión 08:** Necesitamos mostrar "Consultando..." y deshabilitar los botones mientras se espera la respuesta porque la petición tarda y el usuario podría pensar que no pasó nada o lanzar varias consultas a la vez.
 - **Misión 09:** Necesitamos comprobar `response.ok` y distinguir el tipo de fallo porque `fetch()` no lanza error cuando el servidor responde con 404 o 500, y el usuario debe entender qué pasó en lugar de ver un resultado roto.
+- **Misión 10:** Necesitamos adaptar el layout a pantallas pequeñas y dar estilo a los estados de la interfaz porque la mayoría de los usuarios consultarán desde el celular y los textos largos de las monedas no caben en tres columnas estrechas.
 
 ## Evidencia de red (Checkpoint 1)
 
@@ -59,7 +60,15 @@ Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
 
 ![Lista de peticiones](evidencia/network-lista.webp)
 ![Cabeceras](evidencia/network-cabeceras.webp)
+
 **Qué observamos:** el navegador pide el tipo de cambio a la API (Network), recibe un JSON con `date`, `base`, `quote` y `rate`, y `code.js` usa `datos.rate` para calcular y mostrar el resultado (Console y DOM).
+
+## Evidencia de diseño responsive (Misión 10)
+
+![Vista móvil 360 px](evidencia/responsive-movil.png)
+![Vista escritorio 1280 px](evidencia/responsive-escritorio.png)
+
+**Qué observamos:** en móvil los selectores se apilan en una columna para que el nombre completo de la moneda se lea sin cortarse; en escritorio se mantiene el diseño de tres columnas.
 
 ## Checkpoints
 
@@ -73,6 +82,7 @@ Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
 | 07 | Validación previa al fetch | | |
 | 08 | Uso de `finally` para reactivar los botones | | |
 | 09 | Diferencia entre fallo de red (catch) y error HTTP (response.ok) | | |
+| 10 | Función del `@media` y por qué va al final del CSS | | |
 
 ## Decisiones técnicas
 
@@ -81,12 +91,15 @@ Petición `GET https://api.frankfurter.dev/v2/rate/EUR/USD` con estado 200.
 3. Para el caso EUR → EUR elegimos la Opción A: bloquear la acción y notificar al usuario con un mensaje claro, priorizando la simplicidad del código y evitando llamadas innecesarias a la API.
 4. Usamos un bloque `finally` para reactivar los botones porque se ejecuta siempre, tanto si la consulta tiene éxito como si falla; sin él, un error dejaría la interfaz bloqueada.
 5. Comprobamos `response.ok` antes de llamar a `response.json()` para capturar respuestas con código de error HTTP (como 404 o 500), lanzando un error intencional para que el bloque `catch` lo procese. Además, centralizamos los mensajes en `obtenerMensajeError()` para separar la lógica de red de la presentación al usuario.
+6. En pantallas pequeñas apilamos los selectores en una sola columna en lugar de reducir el tamaño del texto, porque con tres columnas cada selector quedaba de unos 125 px y el nombre de la moneda se cortaba. Agregamos el `@media` al final de `styles.css` para que sus reglas tengan prioridad.
 
 ## Pendientes detectados
 - Ninguno por ahora.
 
 ## Resueltos
 - EUR → EUR (misma moneda en origen y destino): resuelto en la Misión 07 con un mensaje de validación.
+- Error HTTP no detectado (resultado `NaN`): resuelto en la Misión 09 comprobando `response.ok`.
+- Selectores cortados en móvil: resuelto en la Misión 10 con un diseño en una columna.
 
 ## Revisión cruzada
 - **Aspecto bien resuelto:** La separación de la lógica de mensajes de error en `obtenerMensajeError()`, permitiendo respuestas claras según si falló la red o la API.
