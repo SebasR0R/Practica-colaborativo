@@ -5,10 +5,10 @@
 - Estudiante B: granados magueyal pamela
 
 ## Pair Programming
-| Misión | Driver | Navigator | Commit / evidencia |
-|---|---|---|---|
-| 04     | pamela | sebastian |"Misión 04: monedas dinámicas desde los selectores — Driver: B / Navigator: A"|
-| 05 | | | |
+| Misión| Driver  | Navigator | Commit / evidencia |
+|---    |---      |---        |---                 |
+| 04    |pamela   | sebastian |"Misión 04: monedas dinámicas desde los selectores — Driver: B / Navigator: A"|
+| 05    |sebastian| pamela    |"Misión 05: Necesitamos formatear el resultado según la moneda porque no todas  usan dos decimales ni resultan legibles con números grandes o muy pequeños."|
 | 06 | | | |
 | 07 | | | |
 | 08 | | | |
