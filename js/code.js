@@ -19,9 +19,6 @@ btnIntercambiar.addEventListener("click", intercambiarMonedas);
 
 // 3. FUNCIÓN PRINCIPAL
 async function convertirMoneda() {
-  // Misiones guiadas 1-3: ya existe un flujo mínimo funcional EUR -> USD.
-  // A partir de la Misión 4 debes convertirlo en una solución dinámica.
-
   const valor = Number(cantidad.value);
 
   // TODO · MISIÓN 07: sustituir esta validación mínima por una validación completa.
@@ -30,7 +27,7 @@ async function convertirMoneda() {
     return;
   }
 
-  // TODO · MISIÓN 04: reemplazar EUR y USD por los valores elegidos en los <select>.
+  // Misión 04 ✔ · las monedas salen de los <select>
   const monedaOrigen = origen.value;
   const monedaDestino = destino.value;
 
@@ -42,13 +39,15 @@ async function convertirMoneda() {
 
     // TODO · MISIÓN 09: comprobar response.ok y lanzar un error si corresponde.
     const datos = await respuesta.json();
-    console.log(datos);   // ← temporal para el Checkpoint 1
 
     const conversion = valor * datos.rate;
 
+    // Misión 05 ✔ · resultado formateado según la moneda
     resultado.classList.remove("error");
-    resultadoTexto.textContent = `${valor.toFixed(2)} ${monedaOrigen} = ${conversion.toFixed(2)} ${monedaDestino}`;
-    detalleTasa.textContent = `1 ${monedaOrigen} = ${datos.rate} ${monedaDestino} · ${datos.date}`;
+    resultadoTexto.textContent =
+      `${formatearMonto(valor, monedaOrigen)} = ${formatearMonto(conversion, monedaDestino)}`;
+    detalleTasa.textContent =
+      `1 ${monedaOrigen} = ${datos.rate} ${monedaDestino} · ${datos.date}`;
 
   } catch (error) {
     // TODO · MISIÓN 09: mejora el mensaje y analiza qué errores pueden llegar aquí.
@@ -70,6 +69,16 @@ function mostrarError(mensaje) {
   resultado.classList.add("error");
   resultadoTexto.textContent = mensaje;
   detalleTasa.textContent = "Revisa los datos e inténtalo nuevamente.";
+}
+
+// Misión 05 ✔ · formatea un monto con separadores y decimales propios de cada moneda
+function formatearMonto(monto, moneda) {
+  return new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: moneda,
+    currencyDisplay: "code",
+    maximumFractionDigits: monto < 1 ? 4 : 2
+  }).format(monto);
 }
 
 // PISTA PARA EL RETO:
