@@ -65,10 +65,16 @@ function intercambiarMonedas() {
 }
 
 // 4. UTILIDADES DE INTERFAZ
-function mostrarError(mensaje) {
-  resultado.classList.add("error");
-  resultadoTexto.textContent = mensaje;
-  detalleTasa.textContent = "Revisa los datos e inténtalo nuevamente.";
+function intercambiarMonedas() {
+  // 1) guardar temporalmente el valor de origen
+  const temporal = origen.value;
+
+  // 2) intercambiar origen.value y destino.value
+  origen.value = destino.value;
+  destino.value = temporal;
+
+  // 3) volver a calcular
+  convertirMoneda();
 }
 
 // Misión 05 ✔ · formatea un monto con separadores y decimales propios de cada moneda
